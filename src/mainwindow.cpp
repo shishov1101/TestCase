@@ -1,4 +1,6 @@
 #include "mainwindow.h"
+#include <QtCharts/QChartView>
+QT_CHARTS_USE_NAMESPACE
 #include "./ui_mainwindow.h"
 
 #define ICON_SIZE 160
@@ -11,26 +13,28 @@ MainWindow::MainWindow(QWidget *parent)
     qRegisterMetaType<QVector<QPair<double,double>>>("QVector<QPair<double,double>>");
     this->setStyleSheet("QMainWindow {background: 'white';}");
     ui->setupUi(this);
+    chartView = new QChartView();
+    chartView->setStyleSheet("background: 'white';");
     setImagesForButton(ui->pushButtonStart, QIcon("://icons/icon-start.png"));
     setImagesForButton(ui->pushButtonPause, QIcon("://icons/icon-pause.png"));
     setImagesForButton(ui->pushButtonStop, QIcon("://icons/icon-stop.png"));
-    ui->chartview->setStyleSheet("background: 'white';");
     threadXY = new ThreadXY("Thread XY");
     connect(threadXY, SIGNAL(sendXY(QVector<QPair<double, double>>)), this, SLOT(draw(QVector<QPair<double, double>>)), Qt::QueuedConnection);
     series0 = new QScatterSeries();
     series0->setName("Values (x;y)");
     series0->setMarkerShape(QScatterSeries::MarkerShapeCircle);
     series0->setMarkerSize(MARKER_SIZE);
-    ui->chartview->chart()->addSeries(series0);
+    chartView->chart()->addSeries(series0);
     for(int i = 0; i < vAxis.length(); ++i){
         vAxis[i]->setTitleText(i == 0 ? tr("y") : tr("x"));
         vAxis[i]->setLabelFormat("%g");
         vAxis[i]->setTickCount(TICK_COUNT);
         vAxis[i]->setMin(i == 0 ? MIN_VALUE : MIN_VALUE);
         vAxis[i]->setMax(i == 0 ? MAX_VALUE : MAX_VALUE);
-        ui->chartview->chart()->addAxis(vAxis[i], i == 0 ? Qt::AlignLeft : Qt::AlignBottom);
+        chartView->chart()->addAxis(vAxis[i], i == 0 ? Qt::AlignLeft : Qt::AlignBottom);
         series0->attachAxis(vAxis[i]);
     }
+    ui->verticalLayout->addWidget(chartView);
 }
 
 void MainWindow::setImagesForButton(QPushButton* button, QIcon icon)
@@ -49,6 +53,7 @@ MainWindow::~MainWindow()
     delete threadXY;
     delete series0;
     for(auto axe : vAxis) delete axe;
+    delete chartView;
 }
 
 void MainWindow::setEnableButtons(bool buttonStart, bool buttonPause, bool buttonStop)

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QtCharts>
+#include <QtCharts/QChartView>
 #include "thread_xy.h"
 
 QT_BEGIN_NAMESPACE
@@ -37,5 +38,6 @@ private:
     QValueAxis *axis_y = new QValueAxis();
     QValueAxis *axis_x = new QValueAxis();
     QVector<QValueAxis*> vAxis{axis_y, axis_x};
+    QChartView *chartView;
 };
 #endif // MAINWINDOW_H

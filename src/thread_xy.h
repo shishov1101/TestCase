@@ -9,7 +9,7 @@
 #define MIN_POINTS 1
 #define MAX_VALUE 100.0
 #define MIN_VALUE -100.0
-#define TIME_SLEEP 500 //msecs
+#define TIME_SLEEP 1000 //msecs
 #define TICK_COUNT 11
 
 class ThreadXY : public QThread
