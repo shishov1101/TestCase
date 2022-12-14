@@ -1,6 +1,4 @@
 #include "mainwindow.h"
-#include <QtCharts/QChartView>
-QT_CHARTS_USE_NAMESPACE
 #include "./ui_mainwindow.h"
 
 #define ICON_SIZE 160
